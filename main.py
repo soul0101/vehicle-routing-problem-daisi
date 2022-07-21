@@ -266,13 +266,14 @@ def st_ui(final_arr, vehicle_capacities):
     search_timeout = st.sidebar.slider(
             'Select a timeout for searching an optimal solution', 10, 600, 10, step=5, help='Increase the time in-case the solution is not satisfactory')
 
-    generate_route_btn = st.sidebar.button("Generate Route")
+    generate_route_btn = st.button("Generate Route")
 
     if generate_route_btn:
-        final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=pick_first_sol[sb_first_sol], ls_metaheuristic=pick_local_search_metaheuristic[sb_local_mh])
-        routes_fig = get_route_plot_plotly(final_route)
-        st.header("Generated Routes")
-        st.plotly_chart(routes_fig)
+        with st.spinner('Finding Optimal Routes...'):
+            final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=pick_first_sol[sb_first_sol], ls_metaheuristic=pick_local_search_metaheuristic[sb_local_mh])
+            routes_fig = get_route_plot_plotly(final_route)
+            st.header("Generated Routes")
+            st.plotly_chart(routes_fig)
 
 if __name__ == '__main__':
     df_source = pd.read_csv("./data/source.csv")
