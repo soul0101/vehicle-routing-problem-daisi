@@ -31,14 +31,14 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
 
     Returns
     -------
-    Dict containing route information for each vehicle
-    {
-        <vehicle_id>: {
-            "route_locs_x": List containing latitudes of drops in route (in order)
-            "route_locs_y" : List containing longitudes of drops in route (in order)
-            "route_node_index" : List containing drop indexes in route (in order)
+    Dict containing route information for each vehicle:
+        {
+            <vehicle_id>: {
+                "route_locs_x": List containing latitudes of drops in route (in order)
+                "route_locs_y" : List containing longitudes of drops in route (in order)
+                "route_node_index" : List containing drop indexes in route (in order)
+            }
         }
-    }
     """
 
     #Instantiate the data_model
@@ -106,6 +106,24 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         return None
 
 def get_route_plot_plotly(final_route):
+    """
+    Returns a Plotly Figure with routes for each vehicle
+
+    Parameters
+    ----------
+    Dict containing route information for each vehicle:
+        {
+            <vehicle_id>: {
+                "route_locs_x": List containing latitudes of drops in route (in order)
+                "route_locs_y" : List containing longitudes of drops in route (in order)
+                "route_node_index" : List containing drop indexes in route (in order)
+            }
+        }
+    
+    Returns
+    ----------
+    plotly.graph_objects.Figure
+    """
     color = px.colors.sequential.Inferno
     fig = go.Figure()
 
@@ -154,6 +172,19 @@ def get_route_plot_plotly(final_route):
     return fig
 
 def get_before_plot_plotly(final_arr):
+    """
+    Returns a Plotly Figure for Source and Drop locations
+
+    Parameters
+    ----------
+    input_locations: 
+        A list with its first element as the location array of source and rest elements being location arrays of drops
+        Eg: [(lat_source, long_source), (lat_drop1, long_drop1), (lat_drop2, long_drop2), ...]
+    
+    Returns
+    ----------
+    plotly.graph_objects.Figure
+    """
     fig = go.Figure()
     fig.add_trace(go.Scatter(x = final_arr[1:, 0], y = final_arr[1:, 1],
                     mode='markers',
