@@ -32,13 +32,13 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
     Returns
     -------
     Dict containing route information for each vehicle:
-        {
-            <vehicle_id>: {
-                "route_locs_x": List containing latitudes of drops in route (in order)
-                "route_locs_y" : List containing longitudes of drops in route (in order)
-                "route_node_index" : List containing drop indexes in route (in order)
-            }
-        }
+        {\n
+            <vehicle_id>: {\n
+                "route_locs_x": List containing latitudes of drops in route (in order)\n
+                "route_locs_y" : List containing longitudes of drops in route (in order)\n
+                "route_node_index" : List containing drop indexes in route (in order)\n
+            }\n
+        }\n
     """
 
     #Instantiate the data_model
@@ -112,13 +112,13 @@ def get_route_plot_plotly(final_route):
     Parameters
     ----------
     Dict containing route information for each vehicle:
-        {
-            <vehicle_id>: {
-                "route_locs_x": List containing latitudes of drops in route (in order)
-                "route_locs_y" : List containing longitudes of drops in route (in order)
-                "route_node_index" : List containing drop indexes in route (in order)
-            }
-        }
+        {\n
+            <vehicle_id>: {\n
+                "route_locs_x": List containing latitudes of drops in route (in order)\n
+                "route_locs_y" : List containing longitudes of drops in route (in order)\n
+                "route_node_index" : List containing drop indexes in route (in order)\n
+            }\n
+        }\n
     
     Returns
     ----------
