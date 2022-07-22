@@ -121,8 +121,8 @@ def get_route_plot_plotly(final_route):
         }\n
     
     Returns
-    ----------
-    plotly.graph_objects.Figure
+    -------
+    fig: plotly.graph_objects.Figure
     """
     color = px.colors.sequential.Inferno
     fig = go.Figure()
@@ -182,8 +182,8 @@ def get_before_plot_plotly(final_arr):
         Eg: [(lat_source, long_source), (lat_drop1, long_drop1), (lat_drop2, long_drop2), ...]
     
     Returns
-    ----------
-    plotly.graph_objects.Figure
+    -------
+    fig: plotly.graph_objects.Figure
     """
     fig = go.Figure()
     fig.add_trace(go.Scatter(x = final_arr[1:, 0], y = final_arr[1:, 1],
