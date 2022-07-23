@@ -102,4 +102,3 @@ def print_solution(data_model, manager, routing, solution, input_locations):
         }
 
     return final_route
-
