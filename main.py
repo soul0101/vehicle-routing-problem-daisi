@@ -10,8 +10,8 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
 def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10, 
-                    first_sol_strategy=routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC,
-                    ls_metaheuristic=routing_enums_pb2.LocalSearchMetaheuristic.AUTOMATIC):
+                    first_sol_strategy="AUTOMATIC",
+                    ls_metaheuristic="AUTOMATIC"):
     """
     Runs the Optimal Route Calculator
 
@@ -24,9 +24,9 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         A list containing the number of drops each vehicle can visit. (Should have atleast one vehicle)
     search_timeout: 
         Maximum time to find a solution
-    first_sol_strategy: 
+    first_sol_strategy: string
         A first solution strategy. Reference: https://developers.google.com/optimization/routing/routing_options#first_sol_options
-    ls_metaheuristic: 
+    ls_metaheuristic: string
         Local Search Option Metaheuristic. Reference: https://developers.google.com/optimization/routing/routing_options#local_search_options
 
     Returns
@@ -93,8 +93,8 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
 
     #Setting first solution heuristic
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy = (first_sol_strategy)
-    search_parameters.local_search_metaheuristic = (ls_metaheuristic)
+    search_parameters.first_solution_strategy = (helper.get_first_sol_strategy(first_sol_strategy))
+    search_parameters.local_search_metaheuristic = (helper.get_local_search_metaheuristic(ls_metaheuristic))
     search_parameters.time_limit.FromSeconds(search_timeout)
 
     solution = routing.SolveWithParameters(search_parameters)
@@ -213,6 +213,8 @@ def get_before_plot_plotly(final_arr):
     )
     return fig
 
+################################## UI ##############################################
+
 def st_ui(final_arr, vehicle_capacities):
     st.write("# Welcome to the Vehicle Route Planner Daisi! 👋")
     st.markdown(
@@ -239,20 +241,6 @@ def st_ui(final_arr, vehicle_capacities):
                             SIMULATED_ANNEALING	  - Uses simulated annealing to escape local minima (cf. http://en.wikipedia.org/wiki/Simulated_annealing).\n
                             TABU_SEARCH	          - Uses tabu search to escape local minima (cf. http://en.wikipedia.org/wiki/Tabu_search).\n
                         """)
-    pick_local_search_metaheuristic = {
-        "AUTOMATIC": routing_enums_pb2.LocalSearchMetaheuristic.AUTOMATIC,
-        "GREEDY_DESCENT": routing_enums_pb2.LocalSearchMetaheuristic.GREEDY_DESCENT, 
-        "GUIDED_LOCAL_SEARCH": routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH,
-        "SIMULATED_ANNEALING": routing_enums_pb2.LocalSearchMetaheuristic.SIMULATED_ANNEALING, 
-        "TABU_SEARCH" : routing_enums_pb2.LocalSearchMetaheuristic.TABU_SEARCH
-    }
-    pick_local_search_metaheuristic = {
-        "AUTOMATIC": routing_enums_pb2.LocalSearchMetaheuristic.AUTOMATIC,
-        "GREEDY_DESCENT": routing_enums_pb2.LocalSearchMetaheuristic.GREEDY_DESCENT, 
-        "GUIDED_LOCAL_SEARCH": routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH,
-        "SIMULATED_ANNEALING": routing_enums_pb2.LocalSearchMetaheuristic.SIMULATED_ANNEALING, 
-        "TABU_SEARCH" : routing_enums_pb2.LocalSearchMetaheuristic.TABU_SEARCH
-    }
 
     st.sidebar.header("First Solution Strategy")
     #First Solution Strategy
@@ -277,22 +265,7 @@ def st_ui(final_arr, vehicle_capacities):
                             LOCAL_CHEAPEST_ARC - Select the first node with an unbound successor and connect it to the node which produces the cheapest route segment.\n
                             FIRST_UNBOUND_MIN_VALUE - Select the first node with an unbound successor and connect it to the first available node. This is equivalent to the CHOOSE_FIRST_UNBOUND strategy combined with ASSIGN_MIN_VALUE (cf. constraint_solver.h).\n
                         """)
-    pick_first_sol = {
-        "AUTOMATIC" : routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC, 
-        "PATH_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC, 
-        "PATH_MOST_CONSTRAINED_ARC" : routing_enums_pb2.FirstSolutionStrategy.PATH_MOST_CONSTRAINED_ARC, 
-        "EVALUATOR_STRATEGY" : routing_enums_pb2.FirstSolutionStrategy.EVALUATOR_STRATEGY, 
-        "SAVINGS" : routing_enums_pb2.FirstSolutionStrategy.SAVINGS, 
-        "SWEEP" : routing_enums_pb2.FirstSolutionStrategy.SWEEP, 
-        "CHRISTOFIDES" : routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES, 
-        "ALL_UNPERFORMED" : routing_enums_pb2.FirstSolutionStrategy.ALL_UNPERFORMED,
-        "BEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.BEST_INSERTION, 
-        "PARALLEL_CHEAPEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION, 
-        "LOCAL_CHEAPEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.LOCAL_CHEAPEST_INSERTION,
-        "GLOBAL_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.GLOBAL_CHEAPEST_ARC, 
-        "LOCAL_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.LOCAL_CHEAPEST_ARC, 
-        "FIRST_UNBOUND_MIN_VALUE" : routing_enums_pb2.FirstSolutionStrategy.FIRST_UNBOUND_MIN_VALUE
-    }
+
     st.sidebar.header("Search Timeout")
     search_timeout = st.sidebar.slider(
             'Select a timeout for searching an optimal solution', 10, 600, 10, step=5, help='Increase the time in-case the solution is not satisfactory')
@@ -301,7 +274,7 @@ def st_ui(final_arr, vehicle_capacities):
 
     if generate_route_btn:
         with st.spinner('Finding Optimal Routes...'):
-            final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=pick_first_sol[sb_first_sol], ls_metaheuristic=pick_local_search_metaheuristic[sb_local_mh])
+            final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=sb_first_sol, ls_metaheuristic=sb_local_mh)
             routes_fig = get_route_plot_plotly(final_route)
             st.header("Generated Routes")
             st.plotly_chart(routes_fig)

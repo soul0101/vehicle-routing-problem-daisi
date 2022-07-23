@@ -2,12 +2,43 @@ import math
 import numpy as np
 from geopy.distance import geodesic
 from sklearn.metrics import pairwise
+from ortools.constraint_solver import routing_enums_pb2
 
 def getDistance(p1, p2):
     """
     Distance in kilometers between two (latitiude, longitude) points.
     """
     return geodesic(p1, p2).km
+
+def get_local_search_metaheuristic(local_mh):
+    pick_local_search_metaheuristic = {
+        "AUTOMATIC": routing_enums_pb2.LocalSearchMetaheuristic.AUTOMATIC,
+        "GREEDY_DESCENT": routing_enums_pb2.LocalSearchMetaheuristic.GREEDY_DESCENT, 
+        "GUIDED_LOCAL_SEARCH": routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH,
+        "SIMULATED_ANNEALING": routing_enums_pb2.LocalSearchMetaheuristic.SIMULATED_ANNEALING, 
+        "TABU_SEARCH" : routing_enums_pb2.LocalSearchMetaheuristic.TABU_SEARCH
+    }
+    return pick_local_search_metaheuristic[local_mh]
+
+def get_first_sol_strategy(first_sol_strategy):
+    pick_first_sol = {
+        "AUTOMATIC" : routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC, 
+        "PATH_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC, 
+        "PATH_MOST_CONSTRAINED_ARC" : routing_enums_pb2.FirstSolutionStrategy.PATH_MOST_CONSTRAINED_ARC, 
+        "EVALUATOR_STRATEGY" : routing_enums_pb2.FirstSolutionStrategy.EVALUATOR_STRATEGY, 
+        "SAVINGS" : routing_enums_pb2.FirstSolutionStrategy.SAVINGS, 
+        "SWEEP" : routing_enums_pb2.FirstSolutionStrategy.SWEEP, 
+        "CHRISTOFIDES" : routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES, 
+        "ALL_UNPERFORMED" : routing_enums_pb2.FirstSolutionStrategy.ALL_UNPERFORMED,
+        "BEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.BEST_INSERTION, 
+        "PARALLEL_CHEAPEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION, 
+        "LOCAL_CHEAPEST_INSERTION" : routing_enums_pb2.FirstSolutionStrategy.LOCAL_CHEAPEST_INSERTION,
+        "GLOBAL_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.GLOBAL_CHEAPEST_ARC, 
+        "LOCAL_CHEAPEST_ARC" : routing_enums_pb2.FirstSolutionStrategy.LOCAL_CHEAPEST_ARC, 
+        "FIRST_UNBOUND_MIN_VALUE" : routing_enums_pb2.FirstSolutionStrategy.FIRST_UNBOUND_MIN_VALUE
+    }
+
+    return pick_first_sol[first_sol_strategy]
 
 def create_data_model(input_locations, vehicle_capacities):
     assert (len(vehicle_capacities) > 0), "Number of vehicles have to be greater than 0"
