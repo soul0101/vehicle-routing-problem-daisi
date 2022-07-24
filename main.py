@@ -129,18 +129,6 @@ def get_route_plot_plotly(final_route, fig=None):
     if fig is None:
         fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x = final_arr[1:, 0], y = final_arr[1:, 1],
-                    mode='markers',
-                    name='Drops', 
-                    marker=dict(color='#848ff0', size=6, 
-                    line=dict(width=1,color='DarkSlateGrey'))))
-
-    fig.add_trace(go.Scatter(x = [final_arr[0][0]], y = [final_arr[0][1]],
-                    mode='markers',
-                    name='Source',
-                    marker=dict(color='red', size=12, 
-                    line=dict(width=1,color='DarkSlateGrey'))))
-
     for vehicle_id, route in final_route.items():
         connector_color = random.choice(color)
         fig.add_trace(go.Scatter(x=route["route_locs_x"], y=route["route_locs_y"],
@@ -149,6 +137,18 @@ def get_route_plot_plotly(final_route, fig=None):
                         line_color=connector_color, 
                         marker=dict(opacity=0),
                         hoverinfo="skip"))
+
+        fig.add_trace(go.Scatter(x = route["route_locs_x"][1:], y = route["route_locs_y"][1:],
+                        mode='markers',
+                        name='Drops', 
+                        marker=dict(color='#848ff0', size=6, 
+                        line=dict(width=1,color='DarkSlateGrey'))))
+
+        fig.add_trace(go.Scatter(x = [route["route_locs_x"][0]], y = [route["route_locs_y"][0]],
+                        mode='markers',
+                        name='Source',
+                        marker=dict(color='red', size=12, 
+                        line=dict(width=1,color='DarkSlateGrey'))))
 
     fig.update_layout(
         width=700,
