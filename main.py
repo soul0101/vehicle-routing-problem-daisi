@@ -105,7 +105,7 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         print("No solution")
         return None
 
-def get_route_plot_plotly(final_route):
+def get_route_plot_plotly(final_route, fig=None):
     """
     Returns a Plotly Figure with routes for each vehicle
 
@@ -125,7 +125,9 @@ def get_route_plot_plotly(final_route):
     fig: plotly.graph_objects.Figure
     """
     color = px.colors.sequential.Inferno
-    fig = go.Figure()
+    
+    if fig is None:
+        fig = go.Figure()
 
     fig.add_trace(go.Scatter(x = final_arr[1:, 0], y = final_arr[1:, 1],
                     mode='markers',
@@ -171,7 +173,7 @@ def get_route_plot_plotly(final_route):
     )
     return fig
 
-def get_before_plot_plotly(final_arr):
+def get_locations_plot_plotly(final_arr, fig = None):
     """
     Returns a Plotly Figure for Source and Drop locations
 
@@ -185,7 +187,9 @@ def get_before_plot_plotly(final_arr):
     -------
     fig: plotly.graph_objects.Figure
     """
-    fig = go.Figure()
+    if fig is None:
+        fig = go.Figure()
+        
     fig.add_trace(go.Scatter(x = final_arr[1:, 0], y = final_arr[1:, 1],
                     mode='markers',
                     name='Drops', 
@@ -226,8 +230,8 @@ def st_ui(final_arr, vehicle_capacities):
         """
     )
     
-    before_fig = get_before_plot_plotly(final_arr)
-    st.plotly_chart(before_fig)
+    locations_fig = get_locations_plot_plotly(final_arr)
+    st.plotly_chart(locations_fig)
 
     st.sidebar.header("Local search options")
     #Local Search Option
