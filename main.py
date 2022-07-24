@@ -129,26 +129,43 @@ def get_route_plot_plotly(final_route, fig=None):
     if fig is None:
         fig = go.Figure()
 
+    x_drops = []
+    y_drops = []
+    x_source = []
+    y_source = []
+
     for vehicle_id, route in final_route.items():
         connector_color = random.choice(color)
+
+        x_drops = np.concatenate((x_drops, route["route_locs_x"][1:]))
+        y_drops = np.concatenate((y_drops, route["route_locs_y"][1:]))
+        x_source = [route["route_locs_x"][0]]
+        y_source = [route["route_locs_y"][0]]
+
         fig.add_trace(go.Scatter(x=route["route_locs_x"], y=route["route_locs_y"],
                         mode='lines+markers', 
                         name="Vehicle #%s"%(vehicle_id),
                         line_color=connector_color, 
                         marker=dict(opacity=0),
+                        legendrank=3,
+                        legendgroup='vehicles',
                         hoverinfo="skip"))
 
-        fig.add_trace(go.Scatter(x = route["route_locs_x"][1:], y = route["route_locs_y"][1:],
-                        mode='markers',
-                        name='Drops', 
-                        marker=dict(color='#848ff0', size=6, 
-                        line=dict(width=1,color='DarkSlateGrey'))))
+    fig.add_trace(go.Scatter(x = x_drops, y = y_drops,
+                    mode='markers',
+                    name='Drops', 
+                    legendgroup='Drops',
+                    legendrank=1,
+                    marker=dict(color='#848ff0', size=6, 
+                    line=dict(width=1,color='DarkSlateGrey'))))
 
-        fig.add_trace(go.Scatter(x = [route["route_locs_x"][0]], y = [route["route_locs_y"][0]],
-                        mode='markers',
-                        name='Source',
-                        marker=dict(color='red', size=12, 
-                        line=dict(width=1,color='DarkSlateGrey'))))
+    fig.add_trace(go.Scatter(x = x_source, y = y_source,
+                    mode='markers',
+                    name='Source',
+                    legendrank=2,
+                    legendgroup='Source',
+                    marker=dict(color='red', size=12, 
+                    line=dict(width=1,color='DarkSlateGrey'))))
 
     fig.update_layout(
         width=700,
