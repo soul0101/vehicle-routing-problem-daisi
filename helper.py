@@ -46,7 +46,7 @@ def create_data_model(input_locations, vehicle_capacities):
     """Stores the data_model for the problem."""
     data_model = {}
     data_model['distance_matrix'] = []
-    input_locations = [[math.radians(_[0]), math.radians(_[1])] for _ in input_locations]
+    input_locations = [[math.radians(float(_[0])), math.radians(float(_[1]))] for _ in input_locations]
     data_model['distance_matrix'] = np.ceil(pairwise.haversine_distances(input_locations) * 637100)
     
     num_drops = len(input_locations) - 1

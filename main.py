@@ -40,7 +40,10 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
             }\n
         }\n
     """
-
+    #debugging
+    print(input_locations, vehicle_capacities, search_timeout, first_sol_strategy, ls_metaheuristic)
+    #debugging
+    
     #Instantiate the data_model
     data_model = helper.create_data_model(input_locations, vehicle_capacities)
 
