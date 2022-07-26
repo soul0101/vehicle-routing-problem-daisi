@@ -106,7 +106,7 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         return helper.print_solution(data_model, manager, routing, solution, input_locations)
     else:
         print("No solution")
-        return None
+        return "No Solution"
 
 def get_route_plot_plotly(final_route, fig=None):
     """
@@ -299,9 +299,13 @@ def st_ui(final_arr, vehicle_capacities):
     if generate_route_btn:
         with st.spinner('Finding Optimal Routes...'):
             final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=sb_first_sol, ls_metaheuristic=sb_local_mh)
-            routes_fig = get_route_plot_plotly(final_route)
-            st.header("Generated Routes")
-            st.plotly_chart(routes_fig)
+            if type(final_route) is not str:
+                routes_fig = get_route_plot_plotly(final_route)
+                st.header("Generated Routes")
+                st.plotly_chart(routes_fig)
+                st.json(final_route, expanded=False)
+            else:
+                st.write("Failed to find a solution, try changing the search parameters or increase the search timeout!")
 
 if __name__ == '__main__':
     df_source = pd.read_csv("./data/source.csv")
@@ -310,7 +314,7 @@ if __name__ == '__main__':
     drop_locations = np.column_stack((df_drops['Latitude'], df_drops['Longitude']))
     final_arr = np.concatenate([source_location, drop_locations])
 
-    num_vehicles = math.ceil((len(final_arr) - 1) / 6)
+    num_vehicles = math.ceil((len(final_arr) - 1) / 4)
     vehicle_capacities = 5 * np.ones(num_vehicles)
     
     st_ui(final_arr, vehicle_capacities)
