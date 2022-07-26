@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
-def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10, 
+def vrp_calculator(input_locations, vehicle_capacities, carryforward_penalty=1000, search_timeout=10, 
                     first_sol_strategy="AUTOMATIC",
                     ls_metaheuristic="AUTOMATIC"):
     """
@@ -22,6 +22,8 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         Eg: [(lat_source, long_source), (lat_drop1, long_drop1), (lat_drop2, long_drop2), ...]
     vehicle_capacities: 
         A list containing the number of drops each vehicle can visit. (Should have atleast one vehicle)
+    carryforward_penalty: 
+        Penalty for dropping a delivery location 
     search_timeout: 
         Maximum time to find a solution
     first_sol_strategy: string
@@ -90,7 +92,7 @@ def vrp_calculator(input_locations, vehicle_capacities, search_timeout=10,
         True,                               # Start cumul to zero
         'Capacity')
 
-    penalty = 1000                          # Penalty for not delivering to a drop point
+    penalty = carryforward_penalty          # Penalty for not delivering to a drop point
     for node in range(1, len(data_model['distance_matrix'])):
         routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
 
@@ -290,6 +292,8 @@ def st_ui(final_arr, vehicle_capacities):
                             FIRST_UNBOUND_MIN_VALUE - Select the first node with an unbound successor and connect it to the first available node. This is equivalent to the CHOOSE_FIRST_UNBOUND strategy combined with ASSIGN_MIN_VALUE (cf. constraint_solver.h).\n
                         """)
 
+    st.sidebar.header("Carry-Forward Penalty")
+    carryforward_penalty = st.sidebar.number_input("Penalty for dropping a delivery location", value=1000)
     st.sidebar.header("Search Timeout")
     search_timeout = st.sidebar.slider(
             'Select a timeout for searching an optimal solution', 10, 600, 10, step=5, help='Increase the time in-case the solution is not satisfactory')
@@ -298,7 +302,7 @@ def st_ui(final_arr, vehicle_capacities):
 
     if generate_route_btn:
         with st.spinner('Finding Optimal Routes...'):
-            final_route = vrp_calculator(final_arr, vehicle_capacities, search_timeout=search_timeout, first_sol_strategy=sb_first_sol, ls_metaheuristic=sb_local_mh)
+            final_route = vrp_calculator(final_arr, vehicle_capacities, carryforward_penalty=carryforward_penalty, search_timeout=search_timeout, first_sol_strategy=sb_first_sol, ls_metaheuristic=sb_local_mh)
             if type(final_route) is not str:
                 routes_fig = get_route_plot_plotly(final_route)
                 st.header("Generated Routes")
