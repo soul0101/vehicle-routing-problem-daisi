@@ -241,6 +241,19 @@ def get_locations_plot_plotly(final_arr, fig = None):
 
 ################################## UI ##############################################
 
+def get_dummy_data():
+    df_source = pd.read_csv("./data/source.csv")
+    df_drops = pd.read_csv("./data/drops.csv")
+    source_location = np.column_stack((df_source['Latitude'], df_source['Longitude']))
+    drop_locations = np.column_stack((df_drops['Latitude'], df_drops['Longitude']))
+    input_locations = np.concatenate([source_location, drop_locations])
+
+    # Mock vehicle capacities
+    num_vehicles = math.ceil((len(input_locations) - 1) / 4)
+    vehicle_capacities = 5 * np.ones(num_vehicles)
+
+    return input_locations, vehicle_capacities
+
 def st_ui(final_arr, vehicle_capacities):
     st.write("# Welcome to the Vehicle Route Planner Daisi! 👋")
     st.markdown(
@@ -312,13 +325,6 @@ def st_ui(final_arr, vehicle_capacities):
                 st.write("Failed to find a solution, try changing the search parameters or increase the search timeout!")
 
 if __name__ == '__main__':
-    df_source = pd.read_csv("./data/source.csv")
-    df_drops = pd.read_csv("./data/drops.csv")
-    source_location = np.column_stack((df_source['Latitude'], df_source['Longitude']))
-    drop_locations = np.column_stack((df_drops['Latitude'], df_drops['Longitude']))
-    final_arr = np.concatenate([source_location, drop_locations])
-
-    num_vehicles = math.ceil((len(final_arr) - 1) / 4)
-    vehicle_capacities = 5 * np.ones(num_vehicles)
+    input_locations, vehicle_capacities = get_dummy_data()
     
-    st_ui(final_arr, vehicle_capacities)
+    st_ui(input_locations, vehicle_capacities)
