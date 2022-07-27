@@ -1,4 +1,4 @@
-# vehicle-routing-problem-daisi
+# Vehicle Routing Problem Daisi
 
 One of the most important applications of optimization is vehicle routing, in which the goal is to find the best routes for a fleet of vehicles visiting a set of locations. Usually, "best" means routes with the least total distance or cost. Here are a few examples of routing problems:
 
