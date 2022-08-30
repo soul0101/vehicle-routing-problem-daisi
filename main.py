@@ -42,9 +42,6 @@ def vrp_calculator(input_locations, vehicle_capacities, carryforward_penalty=100
             }\n
         }\n
     """
-    #debugging
-    print(input_locations, vehicle_capacities, search_timeout, first_sol_strategy, ls_metaheuristic)
-    #debugging
     
     #Instantiate the data_model
     data_model = helper.create_data_model(input_locations, vehicle_capacities)
@@ -107,7 +104,6 @@ def vrp_calculator(input_locations, vehicle_capacities, carryforward_penalty=100
     if solution:
         return helper.print_solution(data_model, manager, routing, solution, input_locations)
     else:
-        print("No solution")
         return "No Solution"
 
 def get_route_plot_plotly(final_route, fig=None):
@@ -326,5 +322,4 @@ def st_ui(final_arr, vehicle_capacities):
 
 if __name__ == '__main__':
     input_locations, vehicle_capacities = get_dummy_data()
-    
     st_ui(input_locations, vehicle_capacities)
