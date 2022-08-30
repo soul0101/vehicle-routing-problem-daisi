@@ -238,6 +238,17 @@ def get_locations_plot_plotly(final_arr, fig = None):
 ################################## UI ##############################################
 
 def get_dummy_data():
+    """
+    Returns dummy data for testing
+
+    Returns
+    ----------
+    input_locations: 
+        A list with its first element as the location array of source and rest elements being location arrays of drops
+        Eg: [(lat_source, long_source), (lat_drop1, long_drop1), (lat_drop2, long_drop2), ...]
+    vehicle_capacities: 
+        A list containing the number of drops each vehicle can visit. (Should have atleast one vehicle)
+    """
     df_source = pd.read_csv("./data/source.csv")
     df_drops = pd.read_csv("./data/drops.csv")
     source_location = np.column_stack((df_source['Latitude'], df_source['Longitude']))
